@@ -1,0 +1,73 @@
+<!-- 
+    Ce code doit être ajouté dans admin_equipe.php
+    dans le formulaire d'ajout/modification de membre
+    après le champ "email"
+-->
+
+<div class="form-group">
+    <label for="google_scholar_id" class="form-label">
+        <i class="fas fa-graduation-cap"></i> Google Scholar ID
+        <small class="text-muted">(optionnel)</small>
+    </label>
+    <input type="text" 
+           id="google_scholar_id" 
+           name="google_scholar_id" 
+           class="form-control" 
+           placeholder="Ex: ABC123XYZ"
+           value="<?php echo isset($membre) ? h($membre['google_scholar_id']) : ''; ?>">
+    <small class="form-text text-muted">
+        Trouvez l'ID sur le profil Google Scholar (URL: scholar.google.com/citations?user=<strong>ID</strong>)
+        <a href="https://scholar.google.com" target="_blank" class="ml-2">
+            <i class="fas fa-external-link-alt"></i> Ouvrir Google Scholar
+        </a>
+    </small>
+</div>
+
+<!-- 
+    ET dans le traitement du formulaire (partie PHP),
+    ajoutez google_scholar_id dans les champs à insérer/modifier :
+-->
+
+<?php
+// Dans la partie INSERT (ajout)
+$stmt = $pdo->prepare("
+    INSERT INTO membres (nom, prenom, email, google_scholar_id, telephone, categorie, specialite, biographie, domaine_recherche, photo, ordre_affichage)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+");
+$stmt->execute([
+    $_POST['nom'],
+    $_POST['prenom'],
+    $_POST['email'],
+    $_POST['google_scholar_id'] ?? null,  // <-- AJOUTER ICI
+    $_POST['telephone'],
+    $_POST['categorie'],
+    $_POST['specialite'],
+    $_POST['biographie'],
+    $_POST['domaine_recherche'],
+    $photo_name,
+    $_POST['ordre_affichage']
+]);
+
+// Dans la partie UPDATE (modification)
+$stmt = $pdo->prepare("
+    UPDATE membres 
+    SET nom = ?, prenom = ?, email = ?, google_scholar_id = ?, telephone = ?, 
+        categorie = ?, specialite = ?, biographie = ?, domaine_recherche = ?, 
+        photo = ?, ordre_affichage = ?
+    WHERE id = ?
+");
+$stmt->execute([
+    $_POST['nom'],
+    $_POST['prenom'],
+    $_POST['email'],
+    $_POST['google_scholar_id'] ?? null,  // <-- AJOUTER ICI
+    $_POST['telephone'],
+    $_POST['categorie'],
+    $_POST['specialite'],
+    $_POST['biographie'],
+    $_POST['domaine_recherche'],
+    $photo_name,
+    $_POST['ordre_affichage'],
+    $id
+]);
+?>
