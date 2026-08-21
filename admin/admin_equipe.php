@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $success = 'Membre ajouté avec succès.';
         }
     } catch (PDOException $e) {
-        $error = 'Erreur lors de l\'enregistrement dans la base de données.';
+        $error = 'Erreur SQL : ' . $e->getMessage();
     }
 }
 
