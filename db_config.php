@@ -4,11 +4,12 @@
  * Laboratory Management System (LMS)
  */
 
-// Configuration de la base de données
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'labo-biotech');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+// Configuration de la base de données Aiven / Environment variables
+define('DB_HOST', getenv('DB_HOST') ?: 'mysql-303cc3b2-labo-biotech.g.aivencloud.com');
+define('DB_PORT', getenv('DB_PORT') ?: '22923');
+define('DB_NAME', getenv('DB_NAME') ?: 'defaultdb');
+define('DB_USER', getenv('DB_USER') ?: 'avnadmin');
+define('DB_PASS', getenv('DB_PASS') ?: 'METS_TON_MOT_DE_PASSE_AIVEN_ICI');
 define('DB_CHARSET', 'utf8mb4');
 
 // Options PDO
@@ -20,7 +21,7 @@ $options = [
 
 // Connexion à la base de données
 try {
-    $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+    $dsn = "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
     $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
 } catch (PDOException $e) {
     die("Erreur de connexion à la base de données : " . $e->getMessage());
@@ -28,7 +29,7 @@ try {
 
 // Configuration de l'application
 define('SITE_NAME', 'Laboratoire Campus de Biotechnologie Végétale');
-define('SITE_URL', 'http://localhost/labo-biotech');
+define('SITE_URL', getenv('RENDER_EXTERNAL_URL') ?: 'https://labo-biotech.onrender.com');
 define('ADMIN_EMAIL', 'admin@labo-biotech.com');
 
 // Chemins
