@@ -1,5 +1,16 @@
 <?php
+session_start();
 require_once '../db_config.php';
+
+// Secours si h() ou SITE_URL ne sont pas définis dans db_config.php
+if (!function_exists('h')) {
+    function h($string) {
+        return htmlspecialchars($string ?? '', ENT_QUOTES, 'UTF-8');
+    }
+}
+if (!defined('SITE_URL')) {
+    define('SITE_URL', '..');
+}
 
 $error = '';
 
@@ -16,11 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         if ($user && password_verify($password, $user['mot_de_passe'])) {
             $_SESSION['admin_id'] = $user['id'];
-            $_SESSION['admin_nom'] = $user['nom'] . ' ' . $user['prenom'];
+            $_SESSION['admin_nom'] = ($user['nom'] ?? '') . ' ' . ($user['prenom'] ?? '');
             $_SESSION['admin_email'] = $user['email'];
-            $_SESSION['admin_role'] = $user['role'];
+            $_SESSION['admin_role'] = $user['role'] ?? 'admin';
             
-            // Mettre à jour la dernière connexion
             $stmt = $pdo->prepare("UPDATE utilisateurs SET derniere_connexion = NOW() WHERE id = ?");
             $stmt->execute([$user['id']]);
             
@@ -85,52 +95,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
-    
-    <style>
-    .login-header {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-    
-    .login-logo {
-        width: 80px;
-        height: 80px;
-        object-fit: contain;
-    }
-    
-    .login-header h1 {
-        font-size: 2rem;
-        color: var(--dark-text);
-        margin-bottom: 0.5rem;
-    }
-    
-    .login-header p {
-        color: var(--gray-text);
-    }
-    
-    .login-form {
-        margin: 2rem 0;
-    }
-    
-    .btn-block {
-        width: 100%;
-    }
-    
-    .login-footer {
-        text-align: center;
-        margin-top: 2rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid var(--border-color);
-    }
-    
-    .login-info {
-        text-align: center;
-        margin-top: 1rem;
-        padding: 1rem;
-        background: var(--light-gray);
-        border-radius: 5px;
-        color: var(--gray-text);
-    }
-    </style>
 </body>
 </html>
