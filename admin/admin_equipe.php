@@ -41,12 +41,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
         
         if (in_array($ext, $allowed)) {
+            // Création automatique du dossier s'il n'existe pas
+            if (!file_exists(UPLOAD_DIR)) {
+                mkdir(UPLOAD_DIR, 0777, true);
+            }
+
             $new_filename = generateFileName($filename);
             $upload_path = UPLOAD_DIR . $new_filename;
             
-            if (move_uploaded_file($_FILES['photo']['tmp_name'], $upload_path)) {
-                $photo = $new_filename;
+            // Vérification des droits d'écriture
+            if (is_writable(UPLOAD_DIR)) {
+                if (move_uploaded_file($_FILES['photo']['tmp_name'], $upload_path)) {
+                    $photo = $new_filename;
+                } else {
+                    $error = "Échec du transfert du fichier vers le serveur.";
+                }
+            } else {
+                $error = "Le répertoire de destination n'est pas accessible en écriture.";
             }
+        } else {
+            $error = "Format d'image non autorisé (utilisez JPG, JPEG, PNG ou GIF).";
         }
     }
     
@@ -81,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $success = 'Membre ajouté avec succès.';
         }
     } catch (PDOException $e) {
-        $error = 'Erreur lors de l\'enregistrement.';
+        $error = 'Erreur lors de l\'enregistrement dans la base de données.';
     }
 }
 
