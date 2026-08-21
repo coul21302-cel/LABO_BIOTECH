@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             
             <div class="login-info">
-                <small>Par défaut: admin@labo-biotech.com / admin123</small>
+                <small> SALUT OUSMANE BARRY </small>
             </div>
         </div>
     </div>

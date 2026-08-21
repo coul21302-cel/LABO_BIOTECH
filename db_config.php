@@ -9,7 +9,7 @@ define('DB_HOST', getenv('DB_HOST') ?: 'mysql-303cc3b2-labo-biotech.g.aivencloud
 define('DB_PORT', getenv('DB_PORT') ?: '22923');
 define('DB_NAME', getenv('DB_NAME') ?: 'defaultdb');
 define('DB_USER', getenv('DB_USER') ?: 'avnadmin');
-define('DB_PASS', getenv('DB_PASS') ?: 'METS_TON_MOT_DE_PASSE_AIVEN_ICI');
+define('DB_PASS', getenv('DB_PASS') ?: '');
 define('DB_CHARSET', 'utf8mb4');
 
 // Options PDO
